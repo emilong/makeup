@@ -1,24 +1,26 @@
-export default `almay
-annabelle
-benefit
-covergirl
-dalish
-e.l.f.
-essie
-iman
-l'oreal
-marcelle
-maybelline
-milani
-misa
-mistura
-moov
-nyx
-orly
-pacifica
-revlon
-sante
-smashbox
-stila
-suncoat
-zorah`.split("\n");
+export default [
+  "almay",
+  "annabelle",
+  "benefit",
+  "covergirl",
+  "dalish",
+  "e.l.f.",
+  "essie",
+  "iman",
+  "l'oreal",
+  "marcelle",
+  "maybelline",
+  "milani",
+  "misa",
+  "mistura",
+  "moov",
+  "nyx",
+  "orly",
+  "pacifica",
+  "revlon",
+  "sante",
+  "smashbox",
+  "stila",
+  "suncoat",
+  "zorah"
+];

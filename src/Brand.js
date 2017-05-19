@@ -8,7 +8,7 @@ import MenuItem from "material-ui/MenuItem";
 import BRANDS from "./brands";
 
 const brandUrl = brand =>
-  `http://makeup-api.herokuapp.com/api/v1/products.json?brand=${brand.toLowerCase()}`;
+  `https://makeup-api.herokuapp.com/api/v1/products.json?brand=${brand.toLowerCase()}`;
 
 export default class Brand extends Component {
   static propTypes = {
