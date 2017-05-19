@@ -1,0 +1,32 @@
+.ProductCard {
+  margin: 16px;
+  max-width: 200px;
+  min-width: 200px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.ProductCard * {
+  font-family: Roboto;
+}
+
+.ProductTitle {
+  font-size: 12px;
+  line-height: 1em;
+}
+
+.ProductColors {
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.ProductColor {
+  display: inline-flex;
+  width: 2em;
+  height: 2em;
+  border-radius: 10%;
+  margin: 0.25em;
+}
