@@ -1,56 +1,51 @@
 import _ from "lodash";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Product from "./Product";
 import "./Brand.css";
 import DropDownMenu from "material-ui/DropDownMenu";
 import MenuItem from "material-ui/MenuItem";
 import BRANDS from "./brands";
+import { fetchBrand } from "./api";
 
-const brandUrl = brand =>
-  `https://makeup-api.herokuapp.com/api/v1/products.json?brand=${brand.toLowerCase()}`;
-
-export default class Brand extends Component {
+class Brand extends Component {
   static propTypes = {
-    match: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    brand: PropTypes.string,
+    products: PropTypes.array,
+    hasFetched: PropTypes.bool,
+    fetchProducts: PropTypes.func.isRequired
   };
 
-  constructor() {
-    super();
-    this.state = {};
-  }
+  populateProducts = (props = this.props) => {
+    const { history, brand, hasFetched, fetchProducts } = props;
 
-  fetchBrand = (brand = this.props.match.params.brand) => {
-    const { history } = this.props;
-
-    fetch(brandUrl(brand)).then(response => response.json()).then(products => {
-      if (_.isEmpty(products)) {
-        const newBrand = _.sample(BRANDS);
-        history.replace(`/${newBrand}`);
-        this.fetchBrand(newBrand);
-      } else {
-        this.setState({ products });
-      }
-    });
+    console.log({ hasFetched, brand });
+    if (!hasFetched) {
+      fetchProducts();
+    } else if (brand === "") {
+      const newBrand = _.sample(BRANDS);
+      history.replace(`/${newBrand}`);
+    }
   };
 
   componentWillMount() {
-    this.fetchBrand();
+    this.populateProducts();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.populateProducts(nextProps);
   }
 
   render() {
-    const { history } = this.props;
-    const { brand } = this.props.match.params;
-    const { products } = this.state;
+    const { history, brand, products } = this.props;
 
     return (
       <div className="BrandProducts">
         <DropDownMenu
           value={brand}
-          onChange={(e, i, brand) => {
-            history.push(`/${brand}`);
-            this.fetchBrand(brand);
-          }}
+          onChange={(e, i, brand) => history.push(`/${brand}`)}
         >
           {BRANDS.map(brand => (
             <MenuItem
@@ -68,3 +63,24 @@ export default class Brand extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, props) => {
+  const brand = props.match.params.brand;
+  const products = state.brandProducts[brand];
+  const isBeingFetched = !!state.brandsBeingFetched[brand];
+  const hasFetched = !isBeingFetched && Array.isArray(products);
+
+  return { brand, products, hasFetched };
+};
+
+const mapDispatchToProps = (dispatch, props) => {
+  const brand = props.match.params.brand;
+
+  return {
+    fetchProducts() {
+      return dispatch(fetchBrand(brand));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Brand);
