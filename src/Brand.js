@@ -21,7 +21,6 @@ class Brand extends Component {
   populateProducts = (props = this.props) => {
     const { history, brand, hasFetched, fetchProducts } = props;
 
-    console.log({ hasFetched, brand });
     if (!hasFetched) {
       fetchProducts();
     } else if (brand === "") {

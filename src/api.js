@@ -2,9 +2,10 @@ const START_BRAND_FETCH = "makeup/api/START_BRAND_FETCH";
 const STORE_BRAND_PRODUCTS = "makeup/api/STORE_BRAND_PRODUCTS";
 
 const EMPTY_STATE = { brandsBeingFetched: [], brandProducts: {} };
+const INITIAL_STATE = window.__PRELOADED_STATE__ || EMPTY_STATE;
 
 // Reducer
-export default function reducer(state = EMPTY_STATE, action = {}) {
+export default function reducer(state = INITIAL_STATE, action = {}) {
   const { type, brand, products } = action;
   const { brandsBeingFetched = [], brandProducts = {} } = state;
 

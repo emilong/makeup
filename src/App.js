@@ -15,10 +15,14 @@ import injectTapEventPlugin from "react-tap-event-plugin";
 import Brand from "./Brand";
 import BRANDS from "./brands";
 import reducer from "./api";
+import savePreloadedState from "./savePreloadedState";
 
 injectTapEventPlugin();
 
-const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
+const store = createStore(
+  reducer,
+  composeWithDevTools(applyMiddleware(thunk, savePreloadedState))
+);
 
 export default function App() {
   return (
