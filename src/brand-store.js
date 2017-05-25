@@ -1,22 +1,14 @@
 import autobind from "autobind-decorator";
-import { extendObservable, action } from "mobx";
+import { extendObservable, action, observable } from "mobx";
 const brandUrl = brand =>
   `https://makeup-api.herokuapp.com/api/v1/products.json?brand=${brand.toLowerCase()}`;
 
 export default class BrandStore {
   constructor(preloadedState) {
-    const {
-      brandProducts = {},
-      brandsBeingFetched = {}
-    } = preloadedState || {};
-
-    const brandProductsMap = new Map();
-    for (const brand of Object.keys(brandProducts)) {
-      brandProductsMap.set(brand, brandProducts[brand]);
-    }
+    const { brandProducts = {} } = preloadedState || {};
 
     extendObservable(this, {
-      brandProducts: brandProductsMap,
+      brandProducts: observable.map(brandProducts),
 
       // ignore any brandsBeingFetched passed in on initialization.
       // they definitely are _not_ being fetched.
@@ -42,9 +34,7 @@ export default class BrandStore {
   }
 
   @autobind hasFetched(brand) {
-    return (
-      !this.isBeingFetched(brand) && Array.isArray(this.getProducts(brand))
-    );
+    return !this.isBeingFetched(brand) && !!this.getProducts(brand);
   }
 
   @autobind getProducts(brand) {
