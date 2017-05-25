@@ -1,28 +1,26 @@
 import _ from "lodash";
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { observer } from "mobx-react";
+
 import PropTypes from "prop-types";
 import Product from "./Product";
 import "./Brand.css";
 import DropDownMenu from "material-ui/DropDownMenu";
 import MenuItem from "material-ui/MenuItem";
 import BRANDS from "./brands";
-import { fetchBrand } from "./api";
 
-class Brand extends Component {
+@observer class Brand extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
-    brand: PropTypes.string,
-    products: PropTypes.array,
-    hasFetched: PropTypes.bool,
-    fetchProducts: PropTypes.func.isRequired
+    brand: PropTypes.string.isRequired,
+    store: PropTypes.object.isRequired
   };
 
   populateProducts = (props = this.props) => {
-    const { history, brand, hasFetched, fetchProducts } = props;
+    const { history, brand, store } = props;
 
-    if (!hasFetched) {
-      fetchProducts();
+    if (!store.hasFetched(brand)) {
+      store.fetchBrand(brand);
     } else if (brand === "") {
       const newBrand = _.sample(BRANDS);
       history.replace(`/${newBrand}`);
@@ -38,7 +36,8 @@ class Brand extends Component {
   }
 
   render() {
-    const { history, brand, products } = this.props;
+    const { history, brand, store } = this.props;
+    const products = store.getProducts(brand);
 
     return (
       <div className="BrandProducts">
@@ -63,23 +62,4 @@ class Brand extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  const brand = props.match.params.brand;
-  const products = state.brandProducts[brand];
-  const isBeingFetched = !!state.brandsBeingFetched[brand];
-  const hasFetched = !isBeingFetched && Array.isArray(products);
-
-  return { brand, products, hasFetched };
-};
-
-const mapDispatchToProps = (dispatch, props) => {
-  const brand = props.match.params.brand;
-
-  return {
-    fetchProducts() {
-      return dispatch(fetchBrand(brand));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Brand);
+export default Brand;

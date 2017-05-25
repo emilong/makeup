@@ -2,7 +2,6 @@ import React from "react";
 import "./Product.css";
 
 export default function ProductColors({ product_colors }) {
-  console.log(product_colors);
   return (
     <div className="ProductColors">
       {product_colors &&
